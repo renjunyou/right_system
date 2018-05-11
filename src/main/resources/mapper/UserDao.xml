@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kdzr.st.right.dao.UserDao">
+
+	<insert id="save" parameterType="com.kdzr.st.right.model.User" useGeneratedKeys="true" keyProperty="id">
+		insert into s_user (
+			id,
+ 			username,
+ 			password
+			)   
+		values (
+			#{id},
+			#{username},
+			#{password}
+			)  
+	</insert>
+	
+	<select id="queryList" resultType="com.kdzr.st.right.model.User">
+		select * from s_user 
+	</select>
+	
+	<!-- 根据用户ID 查询用户 -->
+	<select id="queryObject" parameterType="java.lang.String" resultType="com.kdzr.st.right.model.User">
+		select * from s_user where id = #{id}
+	</select>
+	
+	<!-- 根据用户名  查询用户 -->
+	<select id="queryUserByName" parameterType="java.lang.String" resultType="com.kdzr.st.right.model.User">
+		select * from s_user where username = #{username}
+	</select>
+	
+	<select id="getRoles" parameterType="java.lang.String" resultType="com.kdzr.st.right.dto.UserRoleDto">
+		select t1.user_id userid, t2.username username,t3.name rolename,t3.description descp from s_user_role t1,s_user t2,s_role t3 
+		where t1.user_id = t2.id and t1.role_id = t3.id 
+		and t1.user_id = #{userId}
+	</select>
+	
+	<update id="updateRole" parameterType="com.kdzr.st.right.dto.UserRoleDto">
+		insert into s_user_role(user_id,role_id) values(#{userid},#{roleid})
+	</update>
+	
+	<!-- 清除用户角色 -->
+	<delete id="deleteUserRole" parameterType="java.lang.String">
+		delete from s_user_role where user_id = #{userId}
+	</delete>
+	
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="java.lang.String">
+		delete from s_user where id = #{userId}
+	</delete>
+	
+	<update id="update" parameterType="com.kdzr.st.right.model.User">
+		update s_user set username = #{username},password = #{password} where id = #{id} 
+	</update>
+	
+	
+
+
+
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kdzr.st.right.dao.RoleDao">
+
+	<insert id="save" parameterType="com.kdzr.st.right.model.Role" useGeneratedKeys="true" keyProperty="id">
+		insert into s_role (
+			id,
+ 			name,
+ 			description
+			)   
+		values (
+			#{id},
+			#{name},
+			#{description}
+			)  
+	</insert>
+	
+	<select id="queryList" resultType="com.kdzr.st.right.model.Role">
+		select * from s_role 
+	</select>
+	
+	<!-- 获取角色所有的权限 -->
+	<select id="getPrivileges" parameterType="java.lang.String" resultType="com.kdzr.st.right.dto.RolePrivilegeDto">
+		select t1.role_id roleid, t2.name rolename,t3.name privilegename,t3.description privilegedesc from s_role_privilege t1,s_role t2,s_privilege t3 
+		where t1.role_id = t2.id AND t1.privilege_id = t3.id 
+		and t1.role_id = #{roleId}
+	</select>
+	
+	<!-- 清除角色绑定的权限 -->
+	<delete id="deleteRolePrivilege" parameterType="java.lang.String">
+		delete from s_role_privilege where role_id = #{roleId}
+	</delete>
+	
+	<!-- 删除角色 -->
+	<delete id="delete" parameterType="java.lang.String">
+		delete from s_role where id = #{roleId}
+	</delete>
+	
+	<update id="addPrivilege2Role" parameterType="com.kdzr.st.right.dto.RolePrivilegeDto">
+		insert into s_role_privilege(role_id,privilege_id) values(#{roleid},#{privilegeid})
+	</update>
+	
+	<select id="queryObject" parameterType="java.lang.String" resultType="com.kdzr.st.right.model.Role">
+		select * from s_role where id = #{id}
+	</select>
+	
+	<!-- 修改角色 -->
+	<update id="update" parameterType="com.kdzr.st.right.model.Role">
+		update s_role set name = #{name},description = #{description} where id = #{id} 
+	</update>
+
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kdzr.st.right.dao.OrderDao">
+  <resultMap id="BaseResultMap" type="com.kdzr.st.right.model.Order">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_name" jdbcType="VARCHAR" property="order_name" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="order_date" jdbcType="DATE" property="order_date" />
+  </resultMap>
+  
+  <sql id="sql_where">
+    <where>
+    	<if test="item.order_name != null">and order_name = #{item.order_name}</if>
+    </where>
+  </sql>
+  
+  <select id="selectPage" resultMap="BaseResultMap">
+    select id,order_name,num,order_date from orders
+     <include refid="sql_where" />
+    limit #{page.startRow}, #{page.pageSize}
+  </select>
+  
+  <select id="count" resultType="INTEGER">
+    select count(*) from orders <include refid="sql_where" />
+  </select>
+  
+</mapper>
